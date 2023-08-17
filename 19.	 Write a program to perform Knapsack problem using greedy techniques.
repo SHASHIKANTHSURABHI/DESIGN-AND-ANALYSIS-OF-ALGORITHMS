@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+#define MAX_ITEMS 100
+
+struct item {
+    int weight;
+    int value;
+};
+
+// Compare function for sorting items by value per unit weight in decreasing order
+int compare(const void* a, const void* b) {
+    struct item* itemA = (struct item*) a;
+    struct item* itemB = (struct item*) b;
+    double ratioA = (double) itemA->value / itemA->weight;
+    double ratioB = (double) itemB->value / itemB->weight;
+    return ratioB > ratioA ? 1 : -1;
+}
+
+// Function to solve the Knapsack problem using a greedy approach
+void knapsack(struct item items[], int n, int capacity) {
+    // Sort items by value per unit weight in decreasing order
+    qsort(items, n, sizeof(struct item), compare);
+
+    // Initialize the total weight and value to zero
+    int total_weight = 0;
+    int total_value = 0;
+
+    // Iterate through each item and add it to the knapsack if there is enough capacity
+    for (int i = 0; i < n; i++) {
+        if (total_weight + items[i].weight <= capacity) {
+            total_weight += items[i].weight;
+            total_value += items[i].value;
+        } else {
+            // If there is not enough capacity for the entire item, add a fraction of it
+            double fraction = (double) (capacity - total_weight) / items[i].weight;
+            total_weight += fraction * items[i].weight;
+            total_value += fraction * items[i].value;
+            break;
+        }
+    }
+
+    // Print out the total value and weight of the selected items
+    printf("Total value: %d\n", total_value);
+    printf("Total weight: %d\n", total_weight);
+}
+
+int main() {
+    int capacity;
+    int n;
+
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%d", &capacity);
+
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    struct item items[MAX_ITEMS];
+
+    // Read in the weight and value of each item
+    for (int i = 0; i < n; i++) {
+        printf("Enter the weight and value of item %d: ", i+1);
+        scanf("%d %d", &items[i].weight, &items[i].value);
+    }
+
+    knapsack(items, n, capacity);
+
+    return 0;
+}
