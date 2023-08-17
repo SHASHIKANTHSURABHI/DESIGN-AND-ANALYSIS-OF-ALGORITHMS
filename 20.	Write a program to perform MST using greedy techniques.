@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX_VERTICES 100
+
+int graph[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int parent[MAX_VERTICES];
+int distance[MAX_VERTICES];
+
+// Function to find the vertex with the minimum distance
+int min_distance(int n) {
+    int min_index = -1;
+    int min_distance = INT_MAX;
+    for (int i = 0; i < n; i++) {
+        if (!visited[i] && distance[i] < min_distance) {
+            min_index = i;
+            min_distance = distance[i];
+        }
+    }
+    return min_index;
+}
+
+// Function to print the MST
+void print_mst(int n) {
+    printf("Edge   Weight\n");
+    for (int i = 1; i < n; i++) {
+        printf("%d - %d    %d\n", parent[i], i, graph[i][parent[i]]);
+    }
+}
+
+// Function to find the MST using Prim's algorithm
+void prim(int n) {
+    // Initialize the visited, parent, and distance arrays
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0;
+        parent[i] = -1;
+        distance[i] = INT_MAX;
+    }
+
+    // Set the distance of the first vertex to zero and start from there
+    distance[0] = 0;
+    parent[0] = -1;
+
+    for (int i = 0; i < n-1; i++) {
+        // Find the vertex with the minimum distance
+        int u = min_distance(n);
+        visited[u] = 1;
+
+        // Update the distance of adjacent vertices if they are not visited and have a smaller weight
+        for (int v = 0; v < n; v++) {
+            if (graph[u][v] && !visited[v] && graph[u][v] < distance[v]) {
+                parent[v] = u;
+                distance[v] = graph[u][v];
+            }
+        }
+    }
+
+    print_mst(n);
+}
+
+int main() {
+    int n;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    // Read in the adjacency matrix of the graph
+    printf("Enter the adjacency matrix of the graph:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    prim(n);
+
+    return 0;
+}
