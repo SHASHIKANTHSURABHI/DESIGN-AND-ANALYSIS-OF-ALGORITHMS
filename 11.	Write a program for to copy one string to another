@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char source_string[100];
+    char destination_string[100];
+
+    printf("Enter the source string: ");
+    fgets(source_string, sizeof(source_string), stdin);
+
+    // Remove newline character at the end of the input
+    source_string[strcspn(source_string, "\n")] = 0;
+
+    // Copy the source string to destination string
+    strcpy(destination_string, source_string);
+
+    printf("The copied string is: %s\n", destination_string);
+
+    return 0;
+}
