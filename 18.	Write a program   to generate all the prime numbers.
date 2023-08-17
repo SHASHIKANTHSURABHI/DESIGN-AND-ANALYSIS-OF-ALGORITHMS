@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+void printPrimes(int limit) {
+    bool primes[limit+1];
+
+    // Initialize all elements of the primes array to true
+    for (int i = 0; i <= limit; i++) {
+        primes[i] = true;
+    }
+
+    // Use the Sieve of Eratosthenes algorithm to find prime numbers
+    for (int p = 2; p * p <= limit; p++) {
+        if (primes[p] == true) {
+            // Update all multiples of p as non-prime
+            for (int i = p * p; i <= limit; i += p) {
+                primes[i] = false;
+            }
+        }
+    }
+
+    // Print all prime numbers
+    for (int p = 2; p <= limit; p++) {
+        if (primes[p] == true) {
+            printf("%d ", p);
+        }
+    }
+}
+
+int main() {
+    int limit;
+
+    printf("Enter the limit: ");
+    scanf("%d", &limit);
+
+    printf("The prime numbers up to %d are:\n", limit);
+    printPrimes(limit);
+
+    return 0;
+}
